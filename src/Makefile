@@ -1,7 +1,7 @@
 SRCS_DIR := /src
 BUILD_DIR := /out
 
-TARGET = main
+TARGET = DinguxCommander
 C_SOURCES =  \
 		${wildcard $(SRCS_DIR)/*.c}
 CPP_SOURCES =  \
@@ -27,6 +27,10 @@ EXTRA_LDFLAGS = -lasound -Wl,--as-needed -Wl,--gc-sections -flto -s
 CFLAGS = $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -std=gnu11 
 CXXFLAGS = $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -std=gnu++11 
 LDFLAGS = -Wl,--start-group -lSDL -lSDL_image -lpng -ljpeg -lSDL_mixer -lfreetype -lSDL_ttf -logg -lvorbisidec -lm -pthread -lz -lstdc++ $(EXTRA_LDFLAGS) -Wl,--end-group
+
+RESDIR:=res
+CXXFLAGS+=-DRESDIR="\"$(RESDIR)\""
+CXXFLAGS+=-DPLATFORM_RG35XX
 
 all: $(BUILD_DIR)/$(TARGET).elf
 
