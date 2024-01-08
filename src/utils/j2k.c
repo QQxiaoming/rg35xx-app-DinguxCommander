@@ -1,3 +1,14 @@
+/*
+ * This file is part of the https://github.com/QQxiaoming/rg35xx-app-template.git
+ * project.
+ *
+ * Copyright (C) 2024 Quard <2014500726@smail.xtu.edu.cn>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the BSD 3-Clause License as published by
+ * the Open Source Initiative; see LICENSE for more details.
+ */
+
 // Compile j2k.c into j2k.so and load it through 
 // LD_PRELOAD to help other programs use joypad to map to the keyboard
 
@@ -11,45 +22,27 @@
 #include <linux/uinput.h>
 #include <linux/joystick.h>
 
-typedef struct keypair_s {
-    int key;
-    char joy;
-} keypair;
-
-/*
- SDLK_w            // Up
- SDLK_d            // Right
- SDLK_s            // Down
- SDLK_q            // Left
- SDLK_y            // Y
- SDLK_h            // L
- SDLK_l            // R
- SDLK_a            // A
- SDLK_b            // B
- SDLK_x            // X
- SDLK_n            // SELEC
- SDLK_m            // START
-*/
-static keypair keytable[] = {
-    {KEY_A, 0},
-    {KEY_B, 1},
-    {KEY_X, 2},
-    {KEY_Y, 3},
-    {KEY_POWER, 4},
-    {KEY_H, 5},
-    {KEY_L, 6},
-    {KEY_N, 7},
-    {KEY_M, 8},
-    {KEY_U, 9},
-    {KEY_R, 10},
-    {KEY_T, 11},
-    {KEY_J, 12},
-    {KEY_K, 13},
-    {KEY_Q, 14},
-    {KEY_D, 15},
-    {KEY_W, 16},
-    {KEY_S, 17},
+static uint keytable[] = {
+    KEY_A,        // RG35XX_JOYPAD_A
+    KEY_B,        // RG35XX_JOYPAD_B
+    KEY_X,        // RG35XX_JOYPAD_X
+    KEY_Y,        // RG35XX_JOYPAD_Y
+    KEY_POWER,    // RG35XX_JOYPAD_POWER
+    KEY_H,        // RG35XX_JOYPAD_L1
+    KEY_L,        // RG35XX_JOYPAD_R1
+    KEY_N,        // RG35XX_JOYPAD_SELECT
+    KEY_M,        // RG35XX_JOYPAD_START
+    KEY_U,        // RG35XX_JOYPAD_MENU
+    KEY_R,        // RG35XX_JOYPAD_VOL+
+    KEY_T,        // RG35XX_JOYPAD_VOL-
+    KEY_J,        // RG35XX_JOYPAD_L2
+    KEY_K,        // RG35XX_JOYPAD_R2
+    KEY_Q,        // RG35XX_JOYPAD_Left
+    KEY_D,        // RG35XX_JOYPAD_Right
+    KEY_W,        // RG35XX_JOYPAD_Up
+    KEY_S,        // RG35XX_JOYPAD_Down
 };
+
 static pthread_t j2k_pt = 0;
 static int js_fd = -1, ui_fd = -1;
 
@@ -83,7 +76,7 @@ static void *j2k_thread(void* arg) {
         bytes = read(js_fd, &jse, sizeof(jse));
         if(jse.type == JS_EVENT_BUTTON) {
             if(jse.number < 12) {
-                ie.code = keytable[jse.number].key;
+                ie.code = keytable[jse.number];
                 ie.value = jse.value;
                 jtime2itime(jse.time,&ie.time,&ie_resend.time);
                 sendkey = 1;
@@ -91,21 +84,21 @@ static void *j2k_thread(void* arg) {
             }
         } else if(jse.type == JS_EVENT_AXIS) {
             switch(jse.number) {
-                case 2:
+                case 2:  // RG35XX_JOYPAD_L2
                     ie.code = KEY_J;
                     ie.value = (uint)(0 < jse.value);
                     jtime2itime(jse.time,&ie.time,&ie_resend.time);
                     sendkey = 1;
                     bytes = write(ui_fd, &ie, sizeof(ie));
                     break;
-                case 5:
+                case 5:  // RG35XX_JOYPAD_R2
                     ie.code = KEY_K;
                     ie.value = (uint)(0 < jse.value);
                     jtime2itime(jse.time,&ie.time,&ie_resend.time);
                     sendkey = 1;
                     bytes = write(ui_fd, &ie, sizeof(ie));
                     break;
-                case 6:
+                case 6:  // RG35XX_JOYPAD_Left/Right
                     if(jse.value != 0) uVar4 = jse.value<1?KEY_Q:KEY_D;
                     ie.code = uVar4;
                     ie.value = jse.value==0?0:1;
@@ -113,7 +106,7 @@ static void *j2k_thread(void* arg) {
                     sendkey = 1;
                     bytes = write(ui_fd, &ie, sizeof(ie));
                     break;
-                case 7:
+                case 7:  // RG35XX_JOYPAD_Up/Down
                     if(jse.value != 0) uVar5 = jse.value<1?KEY_W:KEY_S;
                     ie.code = uVar5;
                     ie.value = jse.value==0?0:1;
@@ -144,8 +137,8 @@ void __attribute__((constructor)) init() {
         ui_fd = open("/dev/uinput",O_WRONLY|O_NONBLOCK);
         if (-1 < ui_fd) {
             ioctl(ui_fd,UI_SET_EVBIT,1);
-            for(int i = 0; i < sizeof(keytable)/sizeof(keypair); i++) {
-                ioctl(ui_fd,UI_SET_KEYBIT,keytable[i].key);
+            for(int i = 0; i < sizeof(keytable)/sizeof(uint); i++) {
+                ioctl(ui_fd,UI_SET_KEYBIT,keytable[i]);
             }
             struct uinput_user_dev uud;
             memset(&uud, 0, sizeof(uud));
