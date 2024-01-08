@@ -32,7 +32,7 @@ RESDIR:=res
 CXXFLAGS+=-DRESDIR="\"$(RESDIR)\""
 CXXFLAGS+=-DPLATFORM_RG35XX
 
-all: $(BUILD_DIR)/$(TARGET).elf
+all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/j2k.so
 
 OBJECTS = $(addprefix $(OBJ_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
 vpath %.c $(sort $(dir $(C_SOURCES)))
@@ -50,6 +50,10 @@ $(OBJ_DIR)/%.o: %.cpp Makefile | $(OBJ_DIR)
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 	@echo LD $(notdir $@)
 	@$(CC) $(OBJECTS) $(CFLAGS) $(LDFLAGS) -o $@
+
+$(BUILD_DIR)/j2k.so: $(SRCS_DIR)/utils/j2k.c Makefile
+	@echo LD $(notdir $@)
+	@$(CC) $(CFLAGS) $(LDFLAGS) -fPIC -shared -o $@ $<
 
 $(BUILD_DIR):
 	mkdir $@

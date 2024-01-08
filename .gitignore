@@ -1,4 +1,5 @@
 *.elf
 *.o
+*.so
 
 .DS_Store
