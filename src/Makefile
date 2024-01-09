@@ -1,14 +1,20 @@
-SRCS_DIR := /src
-BUILD_DIR := /out
+ifeq ($(build_native), 1)
+	SRCS_DIR := ./
+	BUILD_DIR := ../out_native
+	EXTRA_LDFLAGS = -lasound -Wl,--as-needed -Wl,--gc-sections -flto -fPIE -s
+else
+	SRCS_DIR := /src
+	BUILD_DIR := /out
+	CHAINPREFIX= /opt/miyoo
+	CROSS_COMPILE=$(CHAINPREFIX)/bin/arm-linux-
+	EXTRA_LDFLAGS = -lasound -Wl,--as-needed -Wl,--gc-sections -flto -s
+endif
 
 TARGET = DinguxCommander
 C_SOURCES =  \
 		${wildcard $(SRCS_DIR)/*.c}
 CPP_SOURCES =  \
 		${wildcard $(SRCS_DIR)/*.cpp}
-
-CHAINPREFIX= /opt/miyoo
-CROSS_COMPILE=$(CHAINPREFIX)/bin/arm-linux-
 
 CC = $(CROSS_COMPILE)gcc
 CXX = $(CROSS_COMPILE)g++
@@ -22,7 +28,6 @@ OBJ_DIR := $(BUILD_DIR)/obj
 DEFINES = -DHAVE_STDINT_H -DVERSION_BITTBOY
 INCLUDES = -Iinclude $(SDL_CFLAGS)
 OPT_FLAGS  = -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto
-EXTRA_LDFLAGS = -lasound -Wl,--as-needed -Wl,--gc-sections -flto -s
 
 CFLAGS = $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -std=gnu11 
 CXXFLAGS = $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -std=gnu++11 
