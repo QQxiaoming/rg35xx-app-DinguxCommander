@@ -205,8 +205,8 @@ enum class OverwriteDialogResult
 OverwriteDialogResult OverwriteDialog(
     const std::string &dest_filename, bool is_last)
 {
-    CDialog dlg{"File already exists:"};
-    dlg.addLabel("Overwrite " + dest_filename + "?");
+    CDialog dlg{"文件已存在:"};
+    dlg.addLabel("是否覆盖 " + dest_filename + "?");
     std::vector<OverwriteDialogResult> options {
         OverwriteDialogResult::CANCEL
     };
@@ -401,7 +401,7 @@ void File_utils::executeFile(const std::string &p_file)
     SDL_utils::hastalavista(); // Free all resources before exec
 
     char *prev_pwd = ::getcwd(NULL, 0);
-    ::chdir(getPath(p_file).c_str());
+    int ret = ::chdir(getPath(p_file).c_str());
     if (getLowercaseFileExtension(p_file) == "opk")
         ::execlp("opkrun", "opkrun", p_file.c_str(), nullptr);
     else
@@ -413,7 +413,7 @@ void File_utils::executeFile(const std::string &p_file)
     std::string error_message = getFileName(p_file) + ": " + child_error;
 
     // Relaunch self and show the error
-    ::chdir(prev_pwd);
+    ret = ::chdir(prev_pwd);
     const std::string self_path = getSelfExecutionPath();
     ::free(prev_pwd);
     execl(self_path.c_str(), self_path.c_str(), "--show_exec_error",
@@ -469,11 +469,11 @@ void File_utils::diskInfo(void)
             std::istream_iterator<std::string>(),
             std::back_inserter<std::vector<std::string>>(l_tokens));
         // Display dialog
-        CDialog l_dialog{"Disk information:"};
-        l_dialog.addLabel("Size: " + l_tokens[1]);
-        l_dialog.addLabel("Used: " + l_tokens[2] + " (" + l_tokens[4] + ")");
-        l_dialog.addLabel("Available: " + l_tokens[3]);
-        l_dialog.addOption("OK");
+        CDialog l_dialog{"磁盘信息:"};
+        l_dialog.addLabel("大小: " + l_tokens[1]);
+        l_dialog.addLabel("已用: " + l_tokens[2] + " (" + l_tokens[4] + ")");
+        l_dialog.addLabel("空闲: " + l_tokens[3]);
+        l_dialog.addOption("确定");
         l_dialog.init();
         l_dialog.execute();
     }
@@ -515,11 +515,11 @@ void File_utils::diskUsed(const std::vector<std::string> &p_files)
     }
     // Dialog
     std::ostringstream l_stream;
-    CDialog l_dialog{"Disk used:"};
-    l_stream << p_files.size() << " items selected";
+    CDialog l_dialog{"磁盘占用:"};
+    l_stream << p_files.size() << " 个文件已选择";
     l_dialog.addLabel(l_stream.str());
-    l_dialog.addLabel("Disk used: " + l_line);
-    l_dialog.addOption("OK");
+    l_dialog.addLabel("占用: " + l_line);
+    l_dialog.addOption("确定");
     l_dialog.init();
     l_dialog.execute();
 }

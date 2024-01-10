@@ -36,8 +36,8 @@ LDFLAGS = -Wl,--start-group -lSDL -lSDL_image -lpng -ljpeg -lSDL_mixer -lfreetyp
 
 RESDIR := res
 CXXFLAGS += -DRESDIR="\"$(RESDIR)\""
-CXXFLAGS += -DPATH_DEFAULT=\"/mnt\"
-CXXFLAGS += -DFILE_SYSTEM=\"/dev/block/mmcblk1\"
+CXXFLAGS += -DPATH_DEFAULT=\"/mnt/mmc/Roms\"
+CXXFLAGS += -DFILE_SYSTEM=\"/dev/block/mmcblk0p4\"
 CXXFLAGS += -DGARLIC
 CXXFLAGS += -DCMDR_KEY_UP=SDLK_w
 CXXFLAGS += -DCMDR_KEY_RIGHT=SDLK_d

@@ -302,7 +302,7 @@ const bool CCommander::openCopyMenu(void) const
     {
         bool l_loop(false);
         std::ostringstream l_stream;
-        l_stream << l_list.size() << " selected:";
+        l_stream << l_list.size() << " 已选择:";
         // File operation dialog
         CDialog l_dialog { l_stream.str(), {}, [this, &l_dialog]() {
                               return Y_LIST_PHYS
@@ -310,19 +310,19 @@ const bool CCommander::openCopyMenu(void) const
                                   * l_dialog.line_height();
                           } };
 
-        l_dialog.addOption(m_panelSource == &m_panelLeft ? "Copy >" : "< Copy");
+        l_dialog.addOption(m_panelSource == &m_panelLeft ? "复制 >" : "< 复制");
         handlers.push_back([&]() {
             File_utils::copyFile(l_list, m_panelTarget->getCurrentPath());
             return true;
         });
 
-        l_dialog.addOption(m_panelSource == &m_panelLeft ? "Move >" : "< Move");
+        l_dialog.addOption(m_panelSource == &m_panelLeft ? "移动 >" : "< 移动");
         handlers.push_back([&]() {
             File_utils::moveFile(l_list, m_panelTarget->getCurrentPath());
             return true;
         });
 
-        l_dialog.addOption(m_panelSource == &m_panelLeft ? "Symlink >" : "< Symlink");
+        l_dialog.addOption(m_panelSource == &m_panelLeft ? "符号链接 >" : "< 符号链接");
         handlers.push_back([&]() {
             File_utils::symlinkFile(l_list, m_panelTarget->getCurrentPath());
             return true;
@@ -330,7 +330,7 @@ const bool CCommander::openCopyMenu(void) const
 
         if (l_list.size() == 1) {
             // The rename option appears only if one item is selected
-            l_dialog.addOption("Rename");
+            l_dialog.addOption("重命名");
             handlers.push_back([&]() {
                 CKeyboard l_keyboard(m_panelSource->getHighlightedItem());
                 if (l_keyboard.execute() == 1 && !l_keyboard.getInputText().empty() && l_keyboard.getInputText() != m_panelSource->getHighlightedItem())
@@ -342,14 +342,14 @@ const bool CCommander::openCopyMenu(void) const
             });
         }
 
-        l_dialog.addOption("Delete");
+        l_dialog.addOption("删除");
         handlers.push_back([&]() {
             File_utils::removeFile(l_list);
             return true;
         });
         const int delete_option = handlers.size();
 
-        l_dialog.addOption("Disk used");
+        l_dialog.addOption("磁盘占用");
         handlers.push_back([&]() {
             File_utils::diskUsed(l_list);
             return false;
@@ -371,8 +371,8 @@ const bool CCommander::openCopyMenu(void) const
                             + (l_dialog.getHighlightedIndex() + 1)
                             * l_dialog.line_height();
                     } };
-                l_dialog2.addOption("Yes");
-                l_dialog2.addOption("No");
+                l_dialog2.addOption("是");
+                l_dialog2.addOption("否");
                 l_dialog2.init();
                 if (l_dialog2.execute() != 1)
                     l_loop = true;
@@ -393,16 +393,17 @@ const bool CCommander::openSystemMenu(void)
     int l_dialogRetVal(0);
     // Selection dialog
     {
-        CDialog l_dialog { "System:", {}, [this, &l_dialog]() {
+        CDialog l_dialog { "系统:", {}, [this, &l_dialog]() {
                               return Y_LIST_PHYS
                                   + m_panelSource->getHighlightedIndexRelative()
                                   * l_dialog.line_height();
                           } };
-        l_dialog.addOption("Select all");
-        l_dialog.addOption("Select none");
-        l_dialog.addOption("New directory");
-        l_dialog.addOption("Disk info");
-        l_dialog.addOption("Quit");
+        l_dialog.addOption("选择全部");
+        l_dialog.addOption("取消选择");
+        l_dialog.addOption("新建目录");
+        l_dialog.addOption("磁盘信息");
+        l_dialog.addOption("帮助");
+        l_dialog.addOption("退出");
 #ifdef KORIKI
         l_dialog.addOption("Go /userdata/system/App");
         l_dialog.addOption("Go /userdata/Roms");
@@ -437,18 +438,39 @@ const bool CCommander::openSystemMenu(void)
             // Disk info
             File_utils::diskInfo();
             break;
-        case 5:
+        case 5: {
+            // Help
+            CDialog l_dialog{"帮助:"};
+            l_dialog.addLabel("Up     - 焦点移动到上一个选项");
+            l_dialog.addLabel("Down   - 焦点移动到下一个选项");
+            l_dialog.addLabel("Left   - 焦点移动到左侧窗口");
+            l_dialog.addLabel("Right  - 焦点移动到右侧窗口");
+            l_dialog.addLabel("A      - 选择/确认");
+            l_dialog.addLabel("B      - 取消/返回");
+            l_dialog.addLabel("X      - 选项菜单");
+            l_dialog.addLabel("Y      - 主菜单");
+            l_dialog.addLabel("L      - 焦点移动到最上");
+            l_dialog.addLabel("R      - 焦点移动到最下");
+            l_dialog.addLabel("Menu   - 主菜单");
+            l_dialog.addLabel("Select - 勾选（用于多选）");
+            l_dialog.addLabel("Start  - 在另一窗口打开");
+            l_dialog.addOption("确定");
+            l_dialog.init();
+            l_dialog.execute();
+            break;
+        }
+        case 6:
             // Quit
             m_retVal = -1;
             break;
 #ifdef KORIKI
-        case 6:
+        case 7:
             m_panelSource->open("/userdata/system/App");
             break;
-        case 7:
+        case 8:
             m_panelSource->open("/userdata/Roms");
             break;
-        case 8:
+        case 9:
             m_panelSource->open("/userdata/system/.simplemenu");
             break;
 #endif
