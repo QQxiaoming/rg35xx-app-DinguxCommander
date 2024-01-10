@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include "panel.h"
+#include "sdl_ttf_multifont.h"
 #include "window.h"
 
 class CCommander : public CWindow
@@ -15,6 +16,12 @@ class CCommander : public CWindow
     // Destructor
     virtual ~CCommander(void);
 
+    // The two panels
+    CPanel m_panelLeft;
+    CPanel m_panelRight;
+    CPanel* m_panelSource;
+    CPanel* m_panelTarget;
+
     private:
 
     // Forbidden
@@ -22,32 +29,49 @@ class CCommander : public CWindow
     CCommander(const CCommander &p_source);
     const CCommander &operator =(const CCommander &p_source);
 
+    // Window resized.
+    void onResize() override;
+
     // Key press management
-    virtual const bool keyPress(const SDL_Event &p_event);
+    bool keyPress(const SDL_Event &event, SDLC_Keycode key,
+        ControllerButton button) override;
 
     // Key hold management
-    virtual const bool keyHold(void);
+    bool keyHold() override;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+    bool gamepadHold(SDL_GameController *controller) override;
+#endif
+
+    bool mouseDown(int button, int x, int y) override;
+    bool mouseWheel(int dx, int dy) override;
+
+    CPanel* focusPanelAt(int *x, int *y, bool *changed);
 
     // Draw
     virtual void render(const bool p_focus) const;
 
     // Is window full screen?
-    virtual const bool isFullScreen(void) const;
+    virtual bool isFullScreen(void) const;
 
     // Open the file operation menus
+    bool itemMenu() const;
+    bool operationMenu() const;
+
+    void ViewFile(std::string &&path) const;
+
     const bool openCopyMenu(void) const;
     void openExecuteMenu(void) const;
 
     // Open the selection menu
     const bool openSystemMenu(void);
 
-    // The two panels
-    CPanel m_panelLeft;
-    CPanel m_panelRight;
-    CPanel* m_panelSource;
-    CPanel* m_panelTarget;
+    // Repeated actions.
+    bool actionUp();
+    bool actionDown();
+    bool actionSelect();
+    bool actionPageUp();
+    bool actionPageDown();
 
-    // Pointers to resources
     SDL_Surface *m_background;
 };
 

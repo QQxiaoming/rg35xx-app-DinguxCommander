@@ -2,6 +2,7 @@ ifeq ($(build_native), 1)
 	SRCS_DIR := ./
 	BUILD_DIR := ../out_native
 	EXTRA_LDFLAGS = -lasound -Wl,--as-needed -Wl,--gc-sections -flto -fPIE -s
+	EXTRA_DEFINES = -DSIMULAT
 else
 	SRCS_DIR := /src
 	BUILD_DIR := /out
@@ -25,7 +26,7 @@ SDL_LIBS    := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 
 OBJ_DIR := $(BUILD_DIR)/obj
 
-DEFINES = -DHAVE_STDINT_H -DVERSION_BITTBOY
+DEFINES = -DHAVE_STDINT_H -DVERSION_BITTBOY $(EXTRA_DEFINES)
 INCLUDES = -Iinclude $(SDL_CFLAGS)
 OPT_FLAGS  = -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto
 
@@ -33,9 +34,32 @@ CFLAGS = $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -std=gnu11
 CXXFLAGS = $(DEFINES) $(INCLUDES) $(OPT_FLAGS) -std=gnu++11 
 LDFLAGS = -Wl,--start-group -lSDL -lSDL_image -lpng -ljpeg -lSDL_mixer -lfreetype -lSDL_ttf -logg -lvorbisidec -lm -pthread -lz -lstdc++ $(EXTRA_LDFLAGS) -Wl,--end-group
 
-RESDIR:=res
-CXXFLAGS+=-DRESDIR="\"$(RESDIR)\""
-CXXFLAGS+=-DPLATFORM_RG35XX
+RESDIR := res
+CXXFLAGS += -DRESDIR="\"$(RESDIR)\""
+CXXFLAGS += -DPATH_DEFAULT=\"/mnt\"
+CXXFLAGS += -DFILE_SYSTEM=\"/dev/block/mmcblk1\"
+CXXFLAGS += -DGARLIC
+CXXFLAGS += -DCMDR_KEY_UP=SDLK_w
+CXXFLAGS += -DCMDR_KEY_RIGHT=SDLK_d
+CXXFLAGS += -DCMDR_KEY_DOWN=SDLK_s
+CXXFLAGS += -DCMDR_KEY_LEFT=SDLK_q
+CXXFLAGS += -DCMDR_KEY_OPEN=SDLK_a		    # A
+CXXFLAGS += -DCMDR_KEY_PARENT=SDLK_b		# B
+CXXFLAGS += -DCMDR_KEY_OPERATION=SDLK_x		# X
+CXXFLAGS += -DCMDR_KEY_SYSTEM=SDLK_y		# Y
+CXXFLAGS += -DCMDR_KEY_PAGEUP=SDLK_h		# L1 / L2 = SDLK_j
+CXXFLAGS += -DCMDR_KEY_PAGEDOWN=SDLK_l		# R1 / R2 = SDLK_k
+CXXFLAGS += -DCMDR_KEY_SELECT=SDLK_n		# SELECT
+CXXFLAGS += -DCMDR_KEY_TRANSFER=SDLK_m		# START
+CXXFLAGS += -DCMDR_KEY_MENU=SDLK_u		    # MENU (added)
+CXXFLAGS += -DOSK_KEY_SYSTEM_IS_BACKSPACE=ON
+CXXFLAGS += -DSCREEN_WIDTH=640
+CXXFLAGS += -DSCREEN_HEIGHT=480
+CXXFLAGS += -DPPU_X=1.666666
+CXXFLAGS += -DPPU_Y=1.666666
+CXXFLAGS += -DAUTOSCALE=0
+CXXFLAGS += -DSCREEN_BPP=16
+CXXFLAGS += -DFONTS='{"FreeSans.ttf",18}'
 
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/j2k.so
 
