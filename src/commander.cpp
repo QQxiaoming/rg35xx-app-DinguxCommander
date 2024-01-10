@@ -292,6 +292,27 @@ bool CCommander::operationMenu() const
     return true;
 }
 
+void CCommander::openHelpMenu(void) {
+    CDialog *help_dialog = new CDialog("帮助", {}, []() { return Y_LIST_PHYS; });
+    help_dialog->addLabel("Up     - 焦点移动到上一个选项");
+    help_dialog->addLabel("Down   - 焦点移动到下一个选项");
+    help_dialog->addLabel("Left   - 焦点移动到左侧窗口");
+    help_dialog->addLabel("Right  - 焦点移动到右侧窗口");
+    help_dialog->addLabel("A      - 选择/确认");
+    help_dialog->addLabel("B      - 取消/返回");
+    help_dialog->addLabel("X      - 选项菜单");
+    help_dialog->addLabel("Y      - 主菜单");
+    help_dialog->addLabel("L      - 焦点移动到最上");
+    help_dialog->addLabel("R      - 焦点移动到最下");
+    help_dialog->addLabel("Menu   - 主菜单");
+    help_dialog->addLabel("Select - 勾选（用于多选）");
+    help_dialog->addLabel("Start  - 在另一窗口打开");
+    help_dialog->addOption("确定");
+    help_dialog->init();
+    help_dialog->execute();
+    delete help_dialog;
+}
+
 const bool CCommander::openCopyMenu(void) const
 {
     std::vector<std::function<bool()>> handlers;
@@ -440,23 +461,7 @@ const bool CCommander::openSystemMenu(void)
             break;
         case 5: {
             // Help
-            CDialog l_dialog{"帮助:"};
-            l_dialog.addLabel("Up     - 焦点移动到上一个选项");
-            l_dialog.addLabel("Down   - 焦点移动到下一个选项");
-            l_dialog.addLabel("Left   - 焦点移动到左侧窗口");
-            l_dialog.addLabel("Right  - 焦点移动到右侧窗口");
-            l_dialog.addLabel("A      - 选择/确认");
-            l_dialog.addLabel("B      - 取消/返回");
-            l_dialog.addLabel("X      - 选项菜单");
-            l_dialog.addLabel("Y      - 主菜单");
-            l_dialog.addLabel("L      - 焦点移动到最上");
-            l_dialog.addLabel("R      - 焦点移动到最下");
-            l_dialog.addLabel("Menu   - 主菜单");
-            l_dialog.addLabel("Select - 勾选（用于多选）");
-            l_dialog.addLabel("Start  - 在另一窗口打开");
-            l_dialog.addOption("确定");
-            l_dialog.init();
-            l_dialog.execute();
+            openHelpMenu();
             break;
         }
         case 6:

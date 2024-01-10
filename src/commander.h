@@ -62,6 +62,8 @@ class CCommander : public CWindow
     const bool openCopyMenu(void) const;
     void openExecuteMenu(void) const;
 
+    void openHelpMenu(void);
+
     // Open the selection menu
     const bool openSystemMenu(void);
 
