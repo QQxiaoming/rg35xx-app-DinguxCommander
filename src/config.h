@@ -38,6 +38,8 @@ struct Config {
     SDLC_Keycode key_operation = CMDR_KEY_OPERATION;
     SDLC_Keycode key_pagedown = CMDR_KEY_PAGEDOWN;
     SDLC_Keycode key_pageup = CMDR_KEY_PAGEUP;
+    SDLC_Keycode key_home = CMDR_KEY_HOME;
+    SDLC_Keycode key_end = CMDR_KEY_END;
     SDLC_Keycode key_parent = CMDR_KEY_PARENT;
     SDLC_Keycode key_right = CMDR_KEY_RIGHT;
     SDLC_Keycode key_select = CMDR_KEY_SELECT;
@@ -55,6 +57,8 @@ struct Config {
     ControllerButton gamepad_operation = CMDR_GAMEPAD_OPERATION;
     ControllerButton gamepad_pagedown = CMDR_GAMEPAD_PAGEDOWN;
     ControllerButton gamepad_pageup = CMDR_GAMEPAD_PAGEUP;
+    ControllerButton gamepad_home = CMDR_GAMEPAD_HOME;
+    ControllerButton gamepad_end = CMDR_GAMEPAD_END;
     ControllerButton gamepad_parent = CMDR_GAMEPAD_PARENT;
     ControllerButton gamepad_right = CMDR_GAMEPAD_RIGHT;
     ControllerButton gamepad_select = CMDR_GAMEPAD_SELECT;

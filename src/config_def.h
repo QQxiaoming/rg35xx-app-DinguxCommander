@@ -67,6 +67,12 @@
 #ifndef CMDR_KEY_PAGEDOWN
 #define CMDR_KEY_PAGEDOWN SDLK_PAGEDOWN
 #endif
+#ifndef CMDR_KEY_HOME
+#define CMDR_KEY_HOME SDLK_HOME
+#endif
+#ifndef CMDR_KEY_END
+#define CMDR_KEY_END SDLK_END
+#endif
 #ifndef CMDR_KEY_OPEN
 #define CMDR_KEY_OPEN SDLK_RETURN
 #endif
@@ -103,6 +109,12 @@
 #endif
 #ifndef CMDR_GAMEPAD_PAGEDOWN
 #define CMDR_GAMEPAD_PAGEDOWN ControllerButton::RIGHTSHOULDER
+#endif
+#ifndef CMDR_GAMEPAD_HOME
+#define CMDR_GAMEPAD_HOME ControllerButton::LEFTSTICK
+#endif
+#ifndef CMDR_GAMEPAD_END
+#define CMDR_GAMEPAD_END ControllerButton::RIGHTSTICK
 #endif
 #ifndef CMDR_GAMEPAD_OPEN
 #define CMDR_GAMEPAD_OPEN ControllerButton::B
