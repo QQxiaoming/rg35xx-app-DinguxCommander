@@ -88,6 +88,12 @@
 #ifndef CMDR_KEY_TRANSFER
 #define CMDR_KEY_TRANSFER SDLK_TAB
 #endif
+#ifndef CMDR_KEY_SHOT
+#define CMDR_KEY_SHOT SDLK_F12
+#endif
+#ifndef CMDR_KEY_QUIT
+#define CMDR_KEY_QUIT SDLK_ESCAPE
+#endif
 
 #ifndef CMDR_GAMEPAD_UP
 #define CMDR_GAMEPAD_UP ControllerButton::UP

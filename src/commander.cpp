@@ -156,6 +156,21 @@ bool CCommander::keyPress(
         }
         return m_panelTarget->open(m_panelSource->getCurrentPath());
     }
+    if (key == c.key_shot) {
+        uint32_t timestamp = SDL_GetTicks();
+        char filename[32];
+        sprintf(filename, "screenshot-%d.bmp", timestamp);
+        SDL_SaveBMP(SDL_GetVideoSurface(), filename);
+        CDialog l_dialog("截图已保存", {}, []() { return Y_LIST_PHYS; });
+        l_dialog.addOption("确定");
+        l_dialog.init();
+        l_dialog.execute();
+        return true;
+    }
+    if (key == c.key_quit) {
+        m_retVal = -1;
+        return true;
+    }
     return false;
 }
 

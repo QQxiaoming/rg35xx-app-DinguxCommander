@@ -46,6 +46,8 @@ struct Config {
     SDLC_Keycode key_system = CMDR_KEY_SYSTEM;
     SDLC_Keycode key_transfer = CMDR_KEY_TRANSFER;
     SDLC_Keycode key_up = CMDR_KEY_UP;
+    SDLC_Keycode key_shot = CMDR_KEY_SHOT;
+    SDLC_Keycode key_quit = CMDR_KEY_QUIT;
 #ifdef GARLIC
     SDLC_Keycode key_menu = CMDR_KEY_MENU;
 #endif
