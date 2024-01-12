@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'doc/**'
+      - 'README.md'
+
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - 'doc/**'
+      - 'README.md'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: pull_docker
+        shell: bash -l {0}
+        run: |
+          docker pull miyoocfw/toolchain-shared-uclibc:latest
+
+      - uses: addnab/docker-run-action@v3
+        with:
+          image: miyoocfw/toolchain-shared-uclibc:latest
+          options: -w /src -v /home/runner/work/rg35xx-app-DinguxCommander/rg35xx-app-DinguxCommander/src:/src -v /home/runner/work/rg35xx-app-DinguxCommander/rg35xx-app-DinguxCommander/out:/out
+          shell: bash -l {0}
+          run: |
+            make
+
+      - name: tar_release
+        shell: bash -l {0}
+        run: |
+          tar -czf release.tar.gz out/j2k.so out/DinguxCommander.elf src/res
+
+      - name: Upload build asserts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release
+          path: |
+            release.tar.gz
