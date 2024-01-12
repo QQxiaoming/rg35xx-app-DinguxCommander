@@ -180,6 +180,16 @@ bool TextViewer::keyPress(
         return moveUp(numFullViewportLines() - 1);
     if (key == c.key_pagedown || button == c.gamepad_pagedown)
         return moveDown(numFullViewportLines() - 1);
+    if (key == c.key_home) {
+        current_line_ = 0;
+        first_line_ = 0;
+        return true;
+    }
+    if (key == c.key_end) {
+        current_line_ = lines_.size() - 1;
+        first_line_ = maxFirstLine();
+        return true;
+    }
     if (key == c.key_left || button == c.gamepad_left) return moveLeft();
     if (key == c.key_right || button == c.gamepad_right) return moveRight();
     return false;
@@ -192,6 +202,16 @@ bool TextViewer::keyHold()
     if (tick(c.key_down)) return moveDown(1);
     if (tick(c.key_pageup)) return moveUp(numFullViewportLines() - 1);
     if (tick(c.key_pagedown)) return moveDown(numFullViewportLines() - 1);
+    if (tick(c.key_home)) {
+        current_line_ = 0;
+        first_line_ = 0;
+        return true;
+    }
+    if (tick(c.key_end)) {
+        current_line_ = lines_.size() - 1;
+        first_line_ = maxFirstLine();
+        return true;
+    }
     if (tick(c.key_left)) return moveLeft();
     if (tick(c.key_right)) return moveRight();
     return false;

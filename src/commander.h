@@ -73,6 +73,8 @@ class CCommander : public CWindow
     bool actionSelect();
     bool actionPageUp();
     bool actionPageDown();
+    bool actionHome();
+    bool actionEnd();
 
     SDL_Surface *m_background;
 };

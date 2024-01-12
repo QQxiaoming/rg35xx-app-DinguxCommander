@@ -219,9 +219,7 @@ void CPanel::render(const bool p_active) const
     std::string l_footer("-");
     if (!m_fileLister.isDirectory(m_highlightedLine))
     {
-        std::ostringstream l_s;
-        l_s << m_fileLister[m_highlightedLine].m_size;
-        l_footer = l_s.str();
+        l_footer = std::to_string(m_fileLister[m_highlightedLine].m_size);
         File_utils::formatSize(l_footer);
     }
     SDL_utils::applyPpuScaledText(m_x + static_cast<int>(2 * screen.ppu_x),
@@ -261,6 +259,35 @@ const bool CPanel::moveCursorDown(unsigned char p_step)
             m_highlightedLine = l_nb - 1;
         else
             m_highlightedLine += p_step;
+        // Adjust camera
+        adjustCamera();
+        // Return true for new render
+        return true;
+    }
+    return false;
+}
+
+const bool CPanel::moveCursorHome(void)
+{
+    if (m_highlightedLine)
+    {
+        // Move cursor
+        m_highlightedLine = 0;
+        // Adjust camera
+        adjustCamera();
+        // Return true for new render
+        return true;
+    }
+    return false;
+}
+
+const bool CPanel::moveCursorEnd(void)
+{
+    const unsigned int l_nb = m_fileLister.getNbTotal();
+    if (m_highlightedLine < l_nb - 1)
+    {
+        // Move cursor
+        m_highlightedLine = l_nb - 1;
         // Adjust camera
         adjustCamera();
         // Return true for new render

@@ -231,6 +231,14 @@ bool CDialog::keyPress(
         }
         return false;
     }
+    if (key == c.key_home || button == c.gamepad_home) {
+        m_highlightedLine = 0;
+        return true;
+    }
+    if (key == c.key_end || button == c.gamepad_end) {
+        m_highlightedLine = m_nbOptions - 1;
+        return true;
+    }
     if (key == c.key_open || button == c.gamepad_open || key == c.key_operation
         || button == c.gamepad_operation) {
         m_retVal = static_cast<int>(m_highlightedLine + 1);

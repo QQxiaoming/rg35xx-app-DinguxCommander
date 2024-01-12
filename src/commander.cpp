@@ -119,6 +119,12 @@ bool CCommander::keyPress(
         return actionPageUp();
     if (key == c.key_pagedown || button == c.gamepad_pagedown)
         return actionPageDown();
+    if (key == c.key_home || button == c.gamepad_home) {
+        return actionHome();
+    }
+    if (key == c.key_end || button == c.gamepad_end) {
+        return actionEnd();
+    }
     if (key == c.key_left || button == c.gamepad_left) {
         if (m_panelSource != &m_panelRight) return false;
         m_panelSource = &m_panelLeft;
@@ -150,6 +156,21 @@ bool CCommander::keyPress(
         }
         return m_panelTarget->open(m_panelSource->getCurrentPath());
     }
+    if (key == c.key_shot) {
+        uint32_t timestamp = SDL_GetTicks();
+        char filename[32];
+        sprintf(filename, "screenshot-%d.bmp", timestamp);
+        SDL_SaveBMP(SDL_GetVideoSurface(), filename);
+        CDialog l_dialog("截图已保存", {}, []() { return Y_LIST_PHYS; });
+        l_dialog.addOption("确定");
+        l_dialog.init();
+        l_dialog.execute();
+        return true;
+    }
+    if (key == c.key_quit) {
+        m_retVal = -1;
+        return true;
+    }
     return false;
 }
 
@@ -163,6 +184,14 @@ bool CCommander::actionPageDown()
 {
     return m_panelSource->moveCursorDown(NB_VISIBLE_LINES - 1);
 }
+bool CCommander::actionHome()
+{
+    return m_panelSource->moveCursorHome();
+}
+bool CCommander::actionEnd()
+{
+    return m_panelSource->moveCursorEnd();
+}
 bool CCommander::actionSelect() { return m_panelSource->addToSelectList(true); }
 
 bool CCommander::keyHold()
@@ -172,6 +201,14 @@ bool CCommander::keyHold()
     if (tick(c.key_down)) return actionDown();
     if (tick(c.key_pageup)) return actionPageUp();
     if (tick(c.key_pagedown)) return actionPageDown();
+    if (tick(c.key_home)) {
+        m_panelSource->moveCursorToVisibleLineIndex(0);
+        return true;
+    }
+    if (tick(c.key_end)) {
+        m_panelSource->moveCursorToVisibleLineIndex(NB_VISIBLE_LINES - 1);
+        return true;
+    }
     if (tick(c.key_select)) return actionSelect();
     return false;
 }
@@ -302,8 +339,10 @@ void CCommander::openHelpMenu(void) {
     help_dialog->addLabel("B      - 取消/返回");
     help_dialog->addLabel("X      - 选项菜单");
     help_dialog->addLabel("Y      - 主菜单");
-    help_dialog->addLabel("L      - 焦点移动到最上");
-    help_dialog->addLabel("R      - 焦点移动到最下");
+    help_dialog->addLabel("L1     - 焦点移动到页顶");
+    help_dialog->addLabel("R1     - 焦点移动到页尾");
+    help_dialog->addLabel("L2     - 焦点移动到最上");
+    help_dialog->addLabel("R2     - 焦点移动到最下");
     help_dialog->addLabel("Menu   - 主菜单");
     help_dialog->addLabel("Select - 勾选（用于多选）");
     help_dialog->addLabel("Start  - 在另一窗口打开");
