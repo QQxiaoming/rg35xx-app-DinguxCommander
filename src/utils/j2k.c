@@ -27,7 +27,7 @@ static uint keytable[] = {
     KEY_B,        // RG35XX_JOYPAD_B
     KEY_X,        // RG35XX_JOYPAD_X
     KEY_Y,        // RG35XX_JOYPAD_Y
-    KEY_POWER,    // RG35XX_JOYPAD_POWER
+    KEY_P,        // RG35XX_JOYPAD_POWER
     KEY_H,        // RG35XX_JOYPAD_L1
     KEY_L,        // RG35XX_JOYPAD_R1
     KEY_N,        // RG35XX_JOYPAD_SELECT
