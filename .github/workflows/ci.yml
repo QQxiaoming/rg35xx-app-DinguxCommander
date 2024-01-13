@@ -37,7 +37,14 @@ jobs:
       - name: tar_release
         shell: bash -l {0}
         run: |
-          tar -czf release.tar.gz out/j2k.so out/DinguxCommander.elf src/res
+          cp out/DinguxCommander.elf DinguxCommander/
+          cp out/j2k.so DinguxCommander/
+          cp -r src/res DinguxCommander/
+          cp scripts/sw.sh DinguxCommander/
+          cp scripts/DinguxCommander.sh DinguxCommander/
+          cp scripts/文件管理器.sh DinguxCommander/
+          cp scripts/文件管理器.sh ./
+          tar -czf release.tar.gz ./DinguxCommander ./Imgs ./文件管理器.sh
 
       - name: Upload build asserts
         uses: actions/upload-artifact@v4
