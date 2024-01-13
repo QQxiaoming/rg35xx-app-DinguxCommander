@@ -37,6 +37,7 @@ jobs:
       - name: tar_release
         shell: bash -l {0}
         run: |
+          mkdir DinguxCommander
           cp out/DinguxCommander.elf DinguxCommander/
           cp out/j2k.so DinguxCommander/
           cp -r src/res DinguxCommander/
