@@ -48,7 +48,7 @@ jobs:
           tar -czf release.tar.gz ./DinguxCommander ./Imgs ./文件管理器.sh
 
       - name: Upload build asserts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: release
           path: |
